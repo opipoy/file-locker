@@ -162,7 +162,7 @@ def export():
 
 
 def check_n_dec():
-    password = ''
+    password = None
     while not verify_pass(password):
         password = input('enter the password:\n>')
         print('try again')
