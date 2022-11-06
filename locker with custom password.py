@@ -11,7 +11,7 @@ def generate_password(password):
     if password.isascii() and 32 >= len(password) >= 8:
         password = password.encode()
 
-        password = password + ((32 - len(password)) * b'-')
+        password = f'{password:*>32}'
 
         password = urlsafe_b64encode(password)
 
