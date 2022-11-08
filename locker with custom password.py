@@ -9,9 +9,8 @@ from base64 import urlsafe_b64encode
 
 def generate_password(password):
     if password.isascii() and 32 >= len(password) >= 8:
-        password = password.encode()
 
-        password = f'{password:*>32}'
+        password = f'{password:*>32}'.encode()
 
         password = urlsafe_b64encode(password)
 
