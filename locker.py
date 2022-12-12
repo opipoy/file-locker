@@ -64,7 +64,7 @@ def with_open(path_of_file_or_dir: str, mode: str, write_to: any = None):
     enter the string or bytes to edit the file
     :return: if you entered r mode it will return what it read
     """
-    x = b''
+    x = None
     with open(path_of_file_or_dir, mode) as file:
         if file.writable():
             file.write(write_to)
@@ -81,10 +81,10 @@ def check_if_secret_file_exist():
 
 the_hidden_file_name = ':encrypted'
 path = os.getcwd()
-location = ''
 if os.path.exists(path + '\\location'):
-    location = with_open(path + '\\location', 'r')
+    location = str(with_open(path + '\\location', 'r'))
 else:
+    location = ''
     messagebox.showinfo('', 'choose the directory you put the Private directory into')
 
     while location == '':
@@ -105,9 +105,6 @@ def show_important_file():
 
 
 def change_password():
-    current_pass = ask_password('enter current password')
-    while not verify_pass(generate_password(current_pass)):
-        current_pass = ask_password('enter current password')
 
     new_password = ask_password('set the new password')
 
@@ -170,7 +167,7 @@ def new():
 
     password = generate_password(the_password)
 
-    os.mkdir(location + '/Private')
+    os.makedirs(location + '/Private')
 
     with_open(location + '/Private/password(dont_delete)', 'wb', Fernet(password).encrypt(the_password.encode()))
 
@@ -214,7 +211,9 @@ def delete_n_hide(main_win: frontend.main_window):
     output = messagebox.askyesno('are you sure?', 'are you sure you want to lock your files?')
     if output:
         make_zip_n_encrypt()
-        os.system(f'type "{location}\\Private.zip" > "{location}{the_hidden_file_name}"')
+        if os.system(f'type "{location}\\Private.zip" > "{location}{the_hidden_file_name}"') != 0:
+            messagebox.showerror('error', 'error while trying to hide files')
+            exit(1)
         os.remove(location + '\\Private.zip')
         messagebox.showinfo('', 'files where locked successfully')
         main_win.root.destroy()
